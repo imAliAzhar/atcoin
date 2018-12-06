@@ -32,7 +32,7 @@ class Chain:
 
         return True
     
-    def toJson(self):
+    def to_json(self):
         json_array = []
         for block in self.chain:
             block = {
@@ -51,7 +51,7 @@ chain.add_block(Block(1, time.time(), {"amount": 20}, 0))
 chain.add_block(Block(2, time.time(), {"amount": 40}, 0))
 chain.add_block(Block(3, time.time(), {"amount": 60}, 0))
 
-print(chain.toJson())
+print(chain.to_json())
 
 # chain.chain[1].data = {"amount":"2000000"}
 # chain.chain[1].hash = chain.chain[1].hash_block()
