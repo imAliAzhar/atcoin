@@ -8,6 +8,7 @@ from block import Block
 class Chain:
     def __init__(self):
         self.chain = [self.create_genesis_block()]
+        self.difficulty = 4
 
     def create_genesis_block(self):
         return Block(0, time.time(), 'Genesis Block', "0")
@@ -17,7 +18,7 @@ class Chain:
     
     def add_block(self, new_block):
         new_block.previous_hash = self.get_latest_block().hash
-        new_block.hash = new_block.hash_block()
+        new_block.mine_block(self.difficulty)
         self.chain.append(new_block)
     
     def is_chain_valid(self):
