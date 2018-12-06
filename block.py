@@ -16,7 +16,7 @@ class Block:
         return sha.hexdigest()
     
     def mine_block(self, difficulty):
-        while self.hash[0, difficulty] != '0' * difficulty:
+        while self.hash[0: difficulty] != '0' * difficulty:
           self.nonce = self.nonce + 1
           self.hash = self.hash_block()
       
