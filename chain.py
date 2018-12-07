@@ -7,10 +7,10 @@ from transaction import Transaction
 class Chain:
     def __init__(self):
         self.chain = [self.create_genesis_block()]
-        self.difficulty = 5
+        self.difficulty = 4
 
     def create_genesis_block(self):
-        return Block(0, time.time(), 'Genesis Block', "0")
+        return Block(0, time.time(), Transaction(0, 0, 0, "genesis"))
 
     def get_latest_block(self):
         return self.chain[len(self.chain) - 1]
@@ -35,22 +35,15 @@ class Chain:
     def to_json(self):
         json_array = []
         for block in self.chain:
-            block = {
-                "index": str(block.index),
-                "timestamp": time.ctime(block.timestamp),
-                "transaction": str(block.data),
-                "p_hash": block.previous_hash,
-                "hash": block.hash
-            }
-            json_array.append(block)
+            json_array.append(block.to_json())
         return json.dumps(json_array, indent=4)
 
 chain = Chain()
 
 transaction = Transaction("Ali", "Ayesha", 100)
-chain.add_block(Block(1, time.time(), transaction, 0))
-chain.add_block(Block(2, time.time(), transaction, 0))
-chain.add_block(Block(3, time.time(), transaction, 0))
+chain.add_block(Block(1, time.time(), transaction))
+chain.add_block(Block(2, time.time(), transaction))
+chain.add_block(Block(3, time.time(), transaction))
 
 print(chain.to_json())
 

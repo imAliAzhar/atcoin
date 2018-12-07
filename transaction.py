@@ -15,3 +15,10 @@ class Transaction:
             + str(self.to)).encode('utf-8'))
         return sha.hexdigest()
         
+    def to_json(self):
+        return {
+            "type": str(self.type),
+            "by": str(self.by),
+            "to": str(self.to),
+            "amount": str(self.amount)
+        }
