@@ -21,11 +21,6 @@ def sign_message(private_key, message):
     signature = signing_key.sign(bmessage)
     return signature, message
 
-def verify_message(public_key, message):
-    # message = message.encode()
-    verifying_key = ecdsa.VerifyingKey.from_string(bytes.fromhex(public_key), curve=ecdsa.SECP256k1)
-    return verifying_key.verify
-
 def validate_signature(public_key, signature, message):
     verifying_key = ecdsa.VerifyingKey.from_string(bytes.fromhex(public_key), curve=ecdsa.SECP256k1)
     return verifying_key.verify(signature, message.encode())
