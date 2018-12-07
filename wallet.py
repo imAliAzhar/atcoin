@@ -1,5 +1,7 @@
 import os
 import ecdsa
+
+
 wallet = "wallet.key"
 
 def generate_keys():
@@ -19,7 +21,10 @@ def sign_message(private_key, message):
     return signature, message
 
 def read_keys():
-   with open(wallet, 'r') as f:
+    if not os.path.isfile(wallet):
+        print("Wallet does not exist.")
+        return
+    with open(wallet, 'r') as f:
        private_key = f.readline().strip()
        public_key = f.readline().strip()
        return private_key, public_key

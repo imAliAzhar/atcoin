@@ -1,7 +1,5 @@
 import time
-import hashlib
 import json
-import jsonpickle
 
 from block import Block
 
