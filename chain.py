@@ -2,11 +2,12 @@ import time
 import json
 
 from block import Block
+from transaction import Transaction
 
 class Chain:
     def __init__(self):
         self.chain = [self.create_genesis_block()]
-        self.difficulty = 4
+        self.difficulty = 5
 
     def create_genesis_block(self):
         return Block(0, time.time(), 'Genesis Block', "0")
@@ -37,7 +38,7 @@ class Chain:
             block = {
                 "index": str(block.index),
                 "timestamp": time.ctime(block.timestamp),
-                "data": str(block.data),
+                "transaction": str(block.data),
                 "p_hash": block.previous_hash,
                 "hash": block.hash
             }
@@ -46,9 +47,10 @@ class Chain:
 
 chain = Chain()
 
-chain.add_block(Block(1, time.time(), {"amount": 20}, 0))
-chain.add_block(Block(2, time.time(), {"amount": 40}, 0))
-chain.add_block(Block(3, time.time(), {"amount": 60}, 0))
+transaction = Transaction("Ali", "Ayesha", 100)
+chain.add_block(Block(1, time.time(), transaction, 0))
+chain.add_block(Block(2, time.time(), transaction, 0))
+chain.add_block(Block(3, time.time(), transaction, 0))
 
 print(chain.to_json())
 
