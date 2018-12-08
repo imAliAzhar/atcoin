@@ -11,12 +11,17 @@ class Blockchain:
         self.chain = [self.create_genesis_block()]
 
     def create_genesis_block(self):
-        return Block(0, time.time(), Transaction(0, 0 ,0))
+        genesis_block = Block(Transaction(0, 0 ,0))
+        genesis_block.index = 0
+        genesis_block.timestamp = time.time()
+        return genesis_block
 
     def get_latest_block(self):
         return self.chain[len(self.chain) - 1]
     
     def add_block(self, new_block):
+        new_block.id = self.get_latest_block().index + 1
+        new_block.time = time.time()
         new_block.previous_hash = self.get_latest_block().hash
         new_block.mine_block(self.difficulty)
         self.chain.append(new_block)
@@ -41,11 +46,15 @@ class Blockchain:
             for record in block.transaction.output:
                 if record.address == user:
                     output_records.append()
+
+        print("Input", input_records)
+        print("Output", output_records)
         return [record for record in output_records if record not in input_records]         
 
     def get_balance(self, user_id):
         unspent_records = self.get_unspent_records(user_id)
         balance = 0
+        print(unspent_records)
         for record in unspent_records:
                 balance = balance + record.amount
         return balance            

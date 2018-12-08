@@ -5,9 +5,9 @@ from transaction import Transaction
 
 
 class Block:
-    def __init__(self, index, timestamp, transaction, previous_hash=0):
-        self.index = index
-        self.timestamp = timestamp
+    def __init__(self, transaction, previous_hash=0):
+        self.index = None
+        self.timestamp = None
         self.transaction = transaction
         self.previous_hash = previous_hash
         self.nonce = 0
