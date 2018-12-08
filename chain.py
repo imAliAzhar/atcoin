@@ -42,10 +42,10 @@ class Blockchain:
         for block in self.chain:
             for record in block.transaction.input:
                 if record.address == user:
-                    input_records.append()
+                    input_records.append(record)
             for record in block.transaction.output:
                 if record.address == user:
-                    output_records.append()
+                    output_records.append(record)
 
         print("Input", input_records)
         print("Output", output_records)
