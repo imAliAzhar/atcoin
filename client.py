@@ -38,6 +38,21 @@ if len(sys.argv) < 2:
     print("Please pass client's name as parameter")
     exit()
 
+print("Welcome {0}!".format(sys.argv[1].lower().capitalize()))
 client = Client(sys.argv[1])
-client.buy(50)
-client.get_balance()
+
+while True:
+    response = 0
+    while response not in ["1", "2", "3", "4"]:
+        response = input("1. Send coins to another wallet\n2. Check available balance\n3. Buy coins\n4. Exit\n\n")
+        if response == "1":
+            NotImplemented
+        if response == "2":
+            client.get_balance()
+        if response == "3":
+            amount = input("Enter number of coins to buy:\n")
+            client.buy(str(amount))
+        if response == "4":
+            exit()
+        
+        print()
