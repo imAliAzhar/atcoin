@@ -7,6 +7,12 @@ node = Flask(__name__)
 def hello():
     return 'Hello World'
 
+@node
+
+
+
+
+
 node.run()
 
 class Miner:
