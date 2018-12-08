@@ -4,14 +4,14 @@ import json
 from block import Block
 from transaction import Transaction
 
-class Chain:
+class Blockchain:
     difficulty = 4
 
     def __init__(self):
         self.chain = [self.create_genesis_block()]
 
     def create_genesis_block(self):
-        return Block(0, time.time(), None)
+        return Block(0, time.time(), Transaction(0, 0 ,0))
 
     def get_latest_block(self):
         return self.chain[len(self.chain) - 1]
@@ -43,6 +43,13 @@ class Chain:
                     output_records.append()
         return [record for record in output_records if record not in input_records]         
 
+    def get_balance(self, user_id):
+        unspent_records = self.get_unspent_records(user_id)
+        balance = 0
+        for record in unspent_records:
+                balance = balance + record.amount
+        return balance            
+
 
     def to_json(self):
         json_array = []
@@ -50,14 +57,14 @@ class Chain:
             json_array.append(block.to_json())
         return json.dumps(json_array, indent=4)
 
-chain = Chain()
+# chain = Blockchain()
 
-transaction = Transaction("Ali", "Ayesha", 100)
-chain.add_block(Block(1, time.time(), transaction))
-chain.add_block(Block(2, time.time(), transaction))
-chain.add_block(Block(3, time.time(), transaction))
+# transaction = Transaction("Ali", "Ayesha", 100)
+# chain.add_block(Block(1, time.time(), transaction))
+# chain.add_block(Block(2, time.time(), transaction))
+# chain.add_block(Block(3, time.time(), transaction))
 
-print(chain.to_json())
+# print(chain.to_json())
 
 # chain.chain[1].data = {"amount":"2000000"}
 # chain.chain[1].hash = chain.chain[1].hash_block()
