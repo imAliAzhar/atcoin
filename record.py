@@ -10,5 +10,5 @@ class Record:
 
     def compute_hash(self):
         sha = hashlib.sha256()
-        sha.update(self.address + self.amount + time.time())
+        sha.update((str(self.address) + str(self.amount) + str(time.time())).encode('utf-8'))
         return sha.hexdigest()
