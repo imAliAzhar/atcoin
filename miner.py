@@ -1,41 +1,47 @@
 import sys
-from flask import Flask, request
 import requests
+import json
+import jsonpickle
+from flask import Flask, request
+
+from wallet import Wallet
+from transaction import Transaction
+from chain import Blockchain
+
 
 node = Flask(__name__)
 
-@node.route('/helo')
-def hello():
-    return 'Hello World'
-
-@node.route('/get_blocks', methods=["POST"])
+@node.route('/blocks', methods=["POST"])
 def get_blocks():
-    if request.method == 'POST':
         block = request.get_json()
-        # print("Parameters")
         print(block)
         return "Block received"
 
-def verify_transaction(transaction):
-    NotImplemented
+@node.route('/transactions', methods=["POST"])
+def get_transactions():
+    tx = request.get_json()
+    tx = json.dumps(tx) #convert dict to json
+    tx = jsonpickle.decode(tx)
+    status = tx.commit(blockchain)
+    if status is True:
+        return "Transaction was successful."
+    else:
+        return status
+
+@node.route('/balance')
+def get_balance():
+    user_id = request.args['user_id']
+    print ("BALANCE", blockchain.get_balance(user_id))
+    return str(blockchain.get_balance(user_id))
 
 
+###############################################################
 
+if len(sys.argv) < 3:
+    print("Please pass miner's name and port as parameters")
+    exit()
 
+wallet = Wallet(sys.argv[1])
+blockchain = Blockchain()
 
-node.run()
-
-# class Miner:
-    # def __init__(self, ip, port):
-        # self.ip = ip
-        # self.port = port
-# 
-
-
-
-# main
-# if len(sys.argv) < 3:
-#     print('Please enter IP and Port for the miner to run on.')
-#     sys.exit()
-# else:
-#     miner = Miner(sys.argv[1], sys.argv[2])
+node.run(host="localhost", port=sys.argv[2])
