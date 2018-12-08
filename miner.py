@@ -1,5 +1,6 @@
 import sys
-from flask import Flask
+from flask import Flask, request
+import requests
 
 node = Flask(__name__)
 
@@ -7,7 +8,16 @@ node = Flask(__name__)
 def hello():
     return 'Hello World'
 
-@node
+@node.route('/get_blocks', methods=["POST"])
+def get_blocks():
+    if request.method == 'POST':
+        block = request.get_json()
+        # print("Parameters")
+        print(block)
+        return "Block received"
+
+def verify_transaction(transaction):
+    NotImplemented
 
 
 
@@ -15,11 +25,11 @@ def hello():
 
 node.run()
 
-class Miner:
-    def __init__(self, ip, port):
-        self.ip = ip
-        self.port = port
-
+# class Miner:
+    # def __init__(self, ip, port):
+        # self.ip = ip
+        # self.port = port
+# 
 
 
 

@@ -1,24 +1,28 @@
 import hashlib
+import json
 
+from record import Record
 
 class Transaction:
-    def __init__(self, by, to, amount, type="regular"):
-        self.type = type
-        self.amount = amount
-        self.by = by
-        self.to = to
-        self.hash = self.compute_hash()
+    def __init__(self, frm, to, amount):
+        self.frm = None
+        self.to = None
+        self.amount = None
+        self.input = []
+        self.output = []
 
-    def compute_hash(self):
-        sha = hashlib.sha256()
-        sha.update((str(self.type) + str(self.amount) + str(self.by) 
-            + str(self.to)).encode('utf-8'))
-        return sha.hexdigest()
+    def commit(self, chain):
+        self.input = chain.get_unspent_records()
+        unspent_amount = 0
+        for record in self.input:
+            unspent_amount = unspent_amount + record.amount
+        if self.amount > unspent_amount:
+            return "Insufficient balance for this transaction. Current balance: " + str(unspent_amount)
+        remainder_amount = unspent_amount - self.amount
+        self.output.append(Record(self.to, self.amount))
+        self.output.append(Record(self.frm, remainder_amount))
+        return True
+
         
-    def to_json(self):
-        return {
-            "type": str(self.type),
-            "by": str(self.by),
-            "to": str(self.to),
-            "amount": str(self.amount)
-        }
+
+        

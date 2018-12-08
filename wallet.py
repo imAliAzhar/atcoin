@@ -12,10 +12,9 @@ class Wallet:
         verifying_key = signing_key.get_verifying_key()
         private_key = signing_key.to_string().hex()
         public_key = verifying_key.to_string().hex()
-        filename = "wallet.key"
         with open(wallet, 'w') as f:
             f.write("{0}\n{1}".format(private_key, public_key))
-        print("Private and public keys have been stored in", filename)
+        print("Private and public keys have been stored in", wallet)
 
 
     def sign_message(self, private_key, message):

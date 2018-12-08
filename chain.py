@@ -5,12 +5,13 @@ from block import Block
 from transaction import Transaction
 
 class Chain:
+    difficulty = 4
+
     def __init__(self):
         self.chain = [self.create_genesis_block()]
-        self.difficulty = 4
 
     def create_genesis_block(self):
-        return Block(0, time.time(), Transaction(0, 0, 0, "genesis"))
+        return Block(0, time.time(), None)
 
     def get_latest_block(self):
         return self.chain[len(self.chain) - 1]
@@ -24,14 +25,25 @@ class Chain:
         for i in range(1, len(self.chain)):
             current_block = self.chain[i]
             previous_block = self.chain[i-1]
-            
             if current_block.hash != current_block.hash_block():
                 return False
             if current_block.previous_hash != previous_block.hash:
                 return False
-
         return True
     
+    def get_unspent_records(self, user):
+        input_records  = []
+        output_records = []
+        for block in self.chain:
+            for record in block.transaction.input:
+                if record.address == user:
+                    input_records.append()
+            for record in block.transaction.output:
+                if record.address == user:
+                    output_records.append()
+        return [record for record in output_records if record not in input_records]         
+
+
     def to_json(self):
         json_array = []
         for block in self.chain:
