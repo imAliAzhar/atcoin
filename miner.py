@@ -7,6 +7,7 @@ from flask import Flask, request
 from wallet import Wallet
 from transaction import Transaction
 from chain import Blockchain
+from block import Block
 
 
 node = Flask(__name__)
@@ -24,6 +25,8 @@ def get_transactions():
     tx = jsonpickle.decode(tx)
     status = tx.commit(blockchain)
     if status is True:
+        block = Block(tx)
+        blockchain.add_block(block)
         return "Transaction was successful."
     else:
         return status
@@ -44,4 +47,4 @@ if len(sys.argv) < 3:
 wallet = Wallet(sys.argv[1])
 blockchain = Blockchain()
 
-node.run(host="localhost", port=sys.argv[2])
+node.run(host="localhost", port=sys.argv[2], debug=True)

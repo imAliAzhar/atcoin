@@ -6,7 +6,7 @@ from wallet import Wallet
 from transaction import Transaction
 
 
-URL = 'http://localhost:3000/'
+URL = 'http://localhost:2999/'
 
 class Client():
     def __init__(self, name):
@@ -23,7 +23,7 @@ class Client():
         url = URL + 'balance'
         payload = {'user_id': self.wallet.public_key}
         response = requests.get(url, params=payload)
-        print("Current Balance:", response.text)
+        print("\nCurrent Balance:", response.text, "BTC")
 
     def send(self, data):
         url = URL + 'transactions'
@@ -50,7 +50,7 @@ while True:
         if response == "2":
             client.get_balance()
         if response == "3":
-            amount = input("Enter number of coins to buy:\n")
+            amount = input("\nEnter number of coins to buy:\n")
             client.buy(str(amount))
         if response == "4":
             exit()

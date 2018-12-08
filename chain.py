@@ -1,5 +1,6 @@
 import time
 import json
+import jsonpickle
 
 from block import Block
 from transaction import Transaction
@@ -20,7 +21,7 @@ class Blockchain:
         return self.chain[len(self.chain) - 1]
     
     def add_block(self, new_block):
-        new_block.id = self.get_latest_block().index + 1
+        new_block.index = self.get_latest_block().index + 1
         new_block.time = time.time()
         new_block.previous_hash = self.get_latest_block().hash
         new_block.mine_block(self.difficulty)
@@ -46,9 +47,6 @@ class Blockchain:
             for record in block.transaction.output:
                 if record.address == user:
                     output_records.append(record)
-
-        print("Input", input_records)
-        print("Output", output_records)
         return [record for record in output_records if record not in input_records]         
 
     def get_balance(self, user_id):
@@ -56,25 +54,11 @@ class Blockchain:
         balance = 0
         print(unspent_records)
         for record in unspent_records:
-                balance = balance + record.amount
+                balance = balance + int(record.amount)
         return balance            
-
 
     def to_json(self):
         json_array = []
         for block in self.chain:
             json_array.append(block.to_json())
         return json.dumps(json_array, indent=4)
-
-# chain = Blockchain()
-
-# transaction = Transaction("Ali", "Ayesha", 100)
-# chain.add_block(Block(1, time.time(), transaction))
-# chain.add_block(Block(2, time.time(), transaction))
-# chain.add_block(Block(3, time.time(), transaction))
-
-# print(chain.to_json())
-
-# chain.chain[1].data = {"amount":"2000000"}
-# chain.chain[1].hash = chain.chain[1].hash_block()
-# print(chain.is_chain_valid())
