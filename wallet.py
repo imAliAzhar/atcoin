@@ -4,7 +4,7 @@ import ecdsa
 
 class Wallet:
     def __init__(self, name):
-        self.name = name.lower()
+        self.name = name.lower().capitalize()
         self.private_key, self.public_key = self.get_keys()
 
     def generate_keys(self, filename):
@@ -33,7 +33,7 @@ class Wallet:
 
 
     def get_keys(self):
-        filename = "keys/" + self.name + ".key"
+        filename = "keys/" + self.name.lower() + ".key"
         if not os.path.isfile(filename):
             print("Wallet for {0} does not exist.".format(self.name))
             self.generate_keys(filename)
