@@ -35,6 +35,7 @@ class Blockchain:
         if latest_block.hash == block.previous_hash:
             self.add_block(block)
             display("Appending received block")
+            return True
         else:
             display("Blockchain possibly behind. We got: " + latest_block.index + " Peer got: " + block.index)   
 
