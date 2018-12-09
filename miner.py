@@ -12,16 +12,18 @@ from block import Block
 
 node = Flask(__name__)
 
-@node.route('/connect', methods=["POST"])
+@node.route('/connect')
 def add_peer():
     port = request.args['port']
-    peers_file = open("peers", "a")
-    peers = peers_file.read().split("\n")
     if port not in peers:
-        print("Adding a new peer:", port)
-        peers_file.write(port + "\n")
+        display("Adding new peer: " + port + ".")
+        peers.append(port)
     else:
-        print("Peer", port, "already exists")
+        display("Peer " + port + " already exists.")
+    return jsonpickle.encode(peers)
+
+@node.route('/chain')
+def send_chain():
     return jsonpickle.encode(blockchain)
 
 @node.route('/block', methods=["POST"])
@@ -29,7 +31,7 @@ def get_blocks():
         block = request.get_json()
         block = json.dumps(block) # convert dict to json
         block = jsonpickle.decode(block)
-        print(block)
+        display(block)
         return "Block received"
 
 @node.route('/transactions', methods=["POST"])
@@ -51,14 +53,42 @@ def get_balance():
     return str(blockchain.get_balance(user_id))
 
 
+def display(message):
+   print("\033[0;32m" + message + "\033[0;00m") 
+
+# def interactive_menu():
+#     while True:
+#         response = 0
+#         while response not in ["1", "2", "3", "4"]:
+#             response = input("1. Connect to the network\n2. Check available balance\n3. Buy coins\n4. Exit\n\n")
+            
+#             if response == "1":
+    
+
 
 ###############################################################
 
 if len(sys.argv) < 3:
-    print("Please pass miner's name and port as parameters")
+    display("Please pass miner's name and port as parameters")
     exit()
 
 wallet = Wallet(sys.argv[1])
-blockchain = Blockchain()
+peers = [500,123,129]
 
-node.run(host="localhost", port=sys.argv[2], debug=True)
+if sys.argv[2] == "-bs": # bootstrap node differentiates itself, does not pass port
+    blockchain = Blockchain()
+    port = 5000 # default port for bootstrap node
+else:
+    display("Connecting to bootstrap node...")
+    base_url = "http://localhost:5000/"
+    port = sys.argv[2]
+    payload = {'port': port}
+    url = base_url + "connect"
+    response = requests.get(url, params=payload)
+    peers = jsonpickle.decode(response.text)
+    url = base_url + "chain"
+    response = requests.get(url)
+    blockchain = jsonpickle.decode(response.text)
+
+display("Running at port " + str(port))
+node.run(host="localhost", port=port)

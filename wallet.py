@@ -18,7 +18,7 @@ class Wallet:
         print("Private keys have been stored in", private_file)
         with open(public_file, 'w') as f:
             f.write(public_key)
-        print("Public keys have been stored in\n", public_file)
+        print("Public keys have been stored in", public_file)
 
 
     def sign_message(self, private_key, message):
