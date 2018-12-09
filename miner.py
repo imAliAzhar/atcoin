@@ -16,7 +16,7 @@ node = Flask(__name__)
 def add_peer():
     port = request.args['port']
     if port not in peers:
-        display("Adding new peer: " + port + ".")
+        display("Adding new peer: " + port)
         peers.append(port)
     else:
         display("Peer " + port + " already exists.")
@@ -31,7 +31,7 @@ def get_blocks():
         block = request.get_json()
         block = json.dumps(block) # convert dict to json
         block = jsonpickle.decode(block)
-        display(block)
+        blockchain.is_block_valid(block)
         return "Block received"
 
 @node.route('/transactions', methods=["POST"])
@@ -43,6 +43,7 @@ def get_transactions():
     if status is True:
         block = Block(tx)
         blockchain.add_block(block)
+        broadcast(block)
         return "Transaction was successful."
     else:
         return status
@@ -52,9 +53,17 @@ def get_balance():
     user_id = request.args['user_id']
     return str(blockchain.get_balance(user_id))
 
+def broadcast(block):
+    base_url = "http://localhost:" 
+    headers = {"Content-Type": "application/json"}
+    payload = jsonpickle.encode(block)
+    for peer in peers:
+        url = base_url + str(peer) + "/block"
+        requests.post(url, data=payload, headers=headers)
+
 
 def display(message):
-   print("\033[0;32m" + message + "\033[0;00m") 
+   print("\033[0;33m" + str(message) + "\033[0;00m") 
 
 # def interactive_menu():
 #     while True:
@@ -73,7 +82,7 @@ if len(sys.argv) < 3:
     exit()
 
 wallet = Wallet(sys.argv[1])
-peers = [500,123,129]
+peers = []
 
 if sys.argv[2] == "-bs": # bootstrap node differentiates itself, does not pass port
     blockchain = Blockchain()
@@ -86,6 +95,7 @@ else:
     url = base_url + "connect"
     response = requests.get(url, params=payload)
     peers = jsonpickle.decode(response.text)
+    peers.append(5000) # add bootstrap node to peers
     url = base_url + "chain"
     response = requests.get(url)
     blockchain = jsonpickle.decode(response.text)

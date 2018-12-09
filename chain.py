@@ -27,6 +27,17 @@ class Blockchain:
         new_block.mine_block(self.difficulty)
         self.chain.append(new_block)
     
+    def is_block_valid(self, block):
+        latest_block = self.get_latest_block()
+        if block.index <= latest_block.index:
+            display("Received blockchain is shorter. Block ignored.")
+            return False
+        if latest_block.hash == block.previous_hash:
+            self.add_block(block)
+            display("Appending received block")
+        else:
+            display("Blockchain possibly behind. We got: " + latest_block.index + " Peer got: " + block.index)   
+
     def is_chain_valid(self):
         for i in range(1, len(self.chain)):
             current_block = self.chain[i]
@@ -62,3 +73,6 @@ class Blockchain:
         for block in self.chain:
             json_array.append(block.to_json())
         return json.dumps(json_array, indent=4)
+
+def display(message):
+   print("\033[0;33m" + message + "\033[0;00m") 
