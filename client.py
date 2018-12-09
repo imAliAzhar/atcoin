@@ -1,6 +1,7 @@
 import os
 import sys
 import requests
+import argparse
 import jsonpickle
 
 from wallet import Wallet
@@ -36,14 +37,16 @@ class Client():
 
 ###############################################################
 
-if len(sys.argv) < 3:
-    print("Please pass client's name and any miner's port as parameter")
-    exit()
 
-print("Welcome {0}!".format(sys.argv[1].lower().title()))
-URL = URL + sys.argv[2] + "/" # adding port to url
+parser = argparse.ArgumentParser(description='miner for atcoin')
+parser.add_argument("-n", "--name", required=True, help="name of the wallet holder")
+parser.add_argument("-p", "--peer", help="any node in the network")
+args = parser.parse_args()
 
-client = Client(sys.argv[1])
+print("Welcome {0}!".format(args.name.lower().title()))
+URL = URL + args.peer + "/" 
+
+client = Client(args.name)
 
 while True:
     response = 0
