@@ -38,7 +38,7 @@ if len(sys.argv) < 2:
     print("Please pass client's name as parameter")
     exit()
 
-print("Welcome {0}!".format(sys.argv[1].lower().capitalize()))
+print("Welcome {0}!".format(sys.argv[1].lower().title()))
 client = Client(sys.argv[1])
 
 while True:
