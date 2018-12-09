@@ -12,16 +12,30 @@ from block import Block
 
 node = Flask(__name__)
 
-@node.route('/blocks', methods=["POST"])
+@node.route('/connect', methods=["POST"])
+def add_peer():
+    port = request.args['port']
+    peers_file = open("peers", "a")
+    peers = peers_file.read().split("\n")
+    if port not in peers:
+        print("Adding a new peer:", port)
+        peers_file.write(port + "\n")
+    else:
+        print("Peer", port, "already exists")
+    return jsonpickle.encode(blockchain)
+
+@node.route('/block', methods=["POST"])
 def get_blocks():
         block = request.get_json()
+        block = json.dumps(block) # convert dict to json
+        block = jsonpickle.decode(block)
         print(block)
         return "Block received"
 
 @node.route('/transactions', methods=["POST"])
 def get_transactions():
     tx = request.get_json()
-    tx = json.dumps(tx) #convert dict to json
+    tx = json.dumps(tx) # convert dict to json
     tx = jsonpickle.decode(tx)
     status = tx.commit(blockchain)
     if status is True:
@@ -35,6 +49,7 @@ def get_transactions():
 def get_balance():
     user_id = request.args['user_id']
     return str(blockchain.get_balance(user_id))
+
 
 
 ###############################################################
