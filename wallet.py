@@ -4,18 +4,21 @@ import ecdsa
 
 class Wallet:
     def __init__(self, name):
-        self.name = name.lower().capitalize()
+        self.name = name.lower().title()
         self.private_key, self.public_key = self.get_keys()
 
-    def generate_keys(self, filename):
+    def generate_keys(self, private_file, public_file):
         print("Creating a new wallet...")
         signing_key = ecdsa.SigningKey.generate(curve=ecdsa.SECP256k1)
         verifying_key = signing_key.get_verifying_key()
         private_key = signing_key.to_string().hex()
         public_key = verifying_key.to_string().hex()
-        with open(filename, 'w') as f:
-            f.write("{0}\n{1}".format(private_key, public_key))
-        print("Private and public keys have been stored in", filename)
+        with open(private_file, 'w') as f:
+            f.write(private_key)
+        print("Private keys have been stored in", private_file)
+        with open(public_file, 'w') as f:
+            f.write(public_key)
+        print("Public keys have been stored in", public_file)
 
 
     def sign_message(self, private_key, message):
@@ -33,14 +36,16 @@ class Wallet:
 
 
     def get_keys(self):
-        filename = "keys/" + self.name.lower() + ".key"
-        if not os.path.isfile(filename):
+        pr_file = "keys/private/" + self.name.lower() + ".key"
+        pu_file = "keys/public/" + self.name.lower() + ".key"
+        if not os.path.isfile(pr_file) or not os.path.isfile(pu_file):
             print("Wallet for {0} does not exist.".format(self.name))
-            self.generate_keys(filename)
-        with open(filename, 'r') as f:
-            private_key = f.readline().strip()
-            public_key = f.readline().strip()
-            return private_key, public_key
+            self.generate_keys(pr_file, pu_file)
+        with open(pr_file, 'r') as f:
+            private_key = f.readline()
+        with open(pu_file, 'r') as f:
+            public_key = f.readline()
+        return private_key, public_key
 
 #########################################
 
