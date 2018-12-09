@@ -7,7 +7,7 @@ class Transaction:
     def __init__(self, frm, to, amount, kind="regular"):
         self.frm = frm
         self.to = to
-        self.amount = amount
+        self.amount = int(amount)
         self.kind = kind
         self.input = []
         self.output = []
@@ -17,7 +17,7 @@ class Transaction:
             self.input = chain.get_unspent_records(self.frm)
             unspent_amount = chain.get_balance(self.frm)
             if self.amount > unspent_amount:
-                return "Insufficient balance for this transaction. Current balance: " + str(unspent_amount)
+                return "\nInsufficient balance for this transaction. Current balance: " + str(unspent_amount)
             remainder_amount = unspent_amount - self.amount
             self.output.append(Record(self.to, self.amount))
             self.output.append(Record(self.frm, remainder_amount))

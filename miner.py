@@ -34,7 +34,6 @@ def get_transactions():
 @node.route('/balance')
 def get_balance():
     user_id = request.args['user_id']
-    print ("BALANCE", blockchain.get_balance(user_id))
     return str(blockchain.get_balance(user_id))
 
 
