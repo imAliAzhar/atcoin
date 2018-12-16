@@ -51,7 +51,11 @@ def broadcast_peer(new_peer):
     for peer in peers:
         if peer != args.address and peer != new_peer:
             url = base_url + str(peer) + "/add_peer"
-            requests.post(url, data=payload, headers=headers)
+            try:
+                requests.post(url, data=payload, headers=headers)
+            except:
+                display("Node " + str(peer) + " is offline.")
+                peers.remove(peer)
 
 
 @node.route('/get_peers')
@@ -89,7 +93,14 @@ def broadcast_block(block):
     for peer in peers:
         if peer != args.address:
             url = base_url + str(peer) + "/block"
-            requests.post(url, data=payload, headers=headers)
+            try:
+                requests.post(url, data=payload, headers=headers)
+            except:
+                display("Node " + str(peer) + " is offline.")
+                peers.remove(peer)
+
+
+
 
 
 

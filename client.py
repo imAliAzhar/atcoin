@@ -25,15 +25,21 @@ class Client():
     def get_balance(self):
         url = URL + 'balance'
         payload = {'user_id': self.wallet.public_key}
-        response = requests.get(url, params=payload)
-        print("\nCurrent Balance:", response.text, "BTC")
+        try:
+            response = requests.get(url, params=payload)
+            print("\nCurrent Balance:", response.text, "BTC")
+        except:
+            print("\nHost is offline..")
 
     def send(self, data):
         url = URL + 'transactions'
         headers = {"Content-Type": "application/json"}
         payload = jsonpickle.encode(data)
-        response = requests.post(url, data=payload, headers=headers)
-        print(response.text)
+        try:
+            response = requests.post(url, data=payload, headers=headers)
+            print(response.text)
+        except:
+            print("\nHost is offline..")
 
 ###############################################################
 

@@ -38,6 +38,7 @@ class Blockchain:
             return True
         else:
             display("Blockchain possibly behind. We got: " + latest_block.index + " Peer got: " + block.index)   
+            NotImplemented
 
     def is_chain_valid(self):
         for i in range(1, len(self.chain)):
